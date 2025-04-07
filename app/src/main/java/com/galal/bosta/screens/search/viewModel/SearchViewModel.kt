@@ -10,7 +10,10 @@ import com.galal.bosta.model.Search
 import kotlinx.coroutines.launch
 
 
-class SearchViewModel(private val repository: SearchRepository) : ViewModel() {
+class SearchViewModel(
+    private val repository: SearchRepository,
+    private val autoFetch: Boolean = true // <-- Add this flag
+) : ViewModel() {
 
     private val _districtsState = mutableStateOf<ApiState<Search>>(ApiState.Loading)
     val districtsState: State<ApiState<Search>> = _districtsState
@@ -24,7 +27,9 @@ class SearchViewModel(private val repository: SearchRepository) : ViewModel() {
     private var fullData: Map<String, List<Pair<String, Boolean>>> = emptyMap()
 
     init {
-        fetchDistricts()
+        if(autoFetch) {
+            fetchDistricts()
+        }
     }
 
     fun fetchDistricts() {
