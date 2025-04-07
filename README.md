@@ -11,5 +11,6 @@
 - Retrofit
 - Coroutines
 - MVVM
+- Repository design pattern
 - Dependency Injection
 - Unite test
