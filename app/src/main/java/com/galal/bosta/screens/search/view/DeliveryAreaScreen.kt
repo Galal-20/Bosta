@@ -33,8 +33,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.galal.bosta.R
 import com.galal.bosta.data.api.ApiState
 import com.galal.bosta.screens.search.viewModel.SearchViewModel
 import com.galal.bosta.utils.AppBar
@@ -79,7 +81,7 @@ fun DeliveryAreaScreen(
                 }
 
                 is ApiState.Failure -> {
-                    Text("Failed to load data", color = Color.Red)
+                    Text(stringResource(R.string.failed_to_load_data), color = Color.Red)
                 }
 
                 is ApiState.Success -> {
@@ -128,7 +130,7 @@ fun SearchBar(searchQuery: String, onSearchChanged: (String) -> Unit) {
             shape = RoundedCornerShape(12.dp),
             value = searchQuery,
             onValueChange = onSearchChanged,
-            placeholder = { Text("City/Area") },
+            placeholder = { Text(stringResource(R.string.city_area)) },
             trailingIcon = {
                 Icon(Icons.Default.Search, contentDescription = null)
             },
@@ -175,7 +177,7 @@ fun AreaItem(area: String, uncovered: Boolean) {
         Text(text = area, fontSize = 15.sp)
         if (uncovered) {
             Text(
-                text = "Uncovered",
+                text = stringResource(R.string.uncovered),
                 fontSize = 12.sp,
                 color = Gray,
                 modifier = Modifier
