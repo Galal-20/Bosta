@@ -39,7 +39,8 @@ import com.galal.bosta.data.api.ApiState
 import com.galal.bosta.screens.search.viewModel.SearchViewModel
 import com.galal.bosta.utils.AppBar
 import com.galal.bosta.utils.LoadingIndicator
-
+import com.galal.bosta.utils.NoInternetConnection
+import com.galal.movies.util.networkListener
 
 
 @Composable
@@ -51,48 +52,53 @@ fun DeliveryAreaScreen(
     val filteredCities by viewModel.filteredData
     val state by viewModel.districtsState
     val expandedCity = remember { mutableStateOf<String?>(null) }
+    val isNetworkAvailable = networkListener()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(start = 16.dp, end = 16.dp, top = 50.dp)
-    ) {
-        AppBar(onClose)
-        Spacer(modifier = Modifier.height(8.dp))
+    if (!isNetworkAvailable.value){
+        NoInternetConnection()
+    }else{
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(start = 16.dp, end = 16.dp, top = 50.dp)
+        ) {
+            AppBar(onClose)
+            Spacer(modifier = Modifier.height(8.dp))
 
-        SearchBar(
-            searchQuery = searchQuery,
-            onSearchChanged = { viewModel.updateSearchQuery(it) }
-        )
+            SearchBar(
+                searchQuery = searchQuery,
+                onSearchChanged = { viewModel.updateSearchQuery(it) }
+            )
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-        when (state) {
-            is ApiState.Loading -> {
-                LoadingIndicator()
-            }
+            when (state) {
+                is ApiState.Loading -> {
+                    LoadingIndicator()
+                }
 
-            is ApiState.Failure -> {
-                Text("Failed to load data", color = Color.Red)
-            }
+                is ApiState.Failure -> {
+                    Text("Failed to load data", color = Color.Red)
+                }
 
-            is ApiState.Success -> {
-                LazyColumn {
-                    filteredCities.forEach { (city, areas) ->
-                        item {
-                            CityItem(
-                                city = city,
-                                isExpanded = expandedCity.value == city,
-                                onExpandToggle = {
-                                    expandedCity.value = if (expandedCity.value == city) null else city
+                is ApiState.Success -> {
+                    LazyColumn {
+                        filteredCities.forEach { (city, areas) ->
+                            item {
+                                CityItem(
+                                    city = city,
+                                    isExpanded = expandedCity.value == city,
+                                    onExpandToggle = {
+                                        expandedCity.value = if (expandedCity.value == city) null else city
+                                    }
+                                )
+                            }
+
+                            if (expandedCity.value == city) {
+                                items(areas) { (areaName, isUncovered) ->
+                                    AreaItem(area = areaName, uncovered = isUncovered)
                                 }
-                            )
-                        }
-
-                        if (expandedCity.value == city) {
-                            items(areas) { (areaName, isUncovered) ->
-                                AreaItem(area = areaName, uncovered = isUncovered)
                             }
                         }
                     }
@@ -100,6 +106,10 @@ fun DeliveryAreaScreen(
             }
         }
     }
+
+
+
+
 }
 
 @Composable
