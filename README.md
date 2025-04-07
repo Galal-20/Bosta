@@ -10,5 +10,6 @@
 - Android Jetpack compose.
 - Retrofit
 - Coroutines
+- MVVM
 - Dependency Injection
 - Unite test
