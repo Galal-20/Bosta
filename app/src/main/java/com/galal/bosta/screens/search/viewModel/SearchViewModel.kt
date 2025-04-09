@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val repository: SearchRepository,
-    private val autoFetch: Boolean = true // <-- Add this flag
+    private val autoFetch: Boolean = true  // fetch data automatically when ViewModel is created
 ) : ViewModel() {
 
     private val _districtsState = mutableStateOf<ApiState<Search>>(ApiState.Loading)
